@@ -1,12 +1,25 @@
-FROM golang:alpine as builder
-RUN apk update && apk add git && apk add ca-certificates
-COPY *.go $GOPATH/src/mypackage/myapp/
-WORKDIR $GOPATH/src/mypackage/myapp/
-RUN go mod init && go mod tidy
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-w -s" -o /go/bin/docker_state_exporter
-
-FROM alpine:3
-COPY --from=builder /go/bin/docker_state_exporter /go/bin/docker_state_exporter
-EXPOSE 8080
-ENTRYPOINT ["/go/bin/docker_state_exporter"]
-CMD ["-listen-address=:8080"]
+# -------- build stage -------------------------------------------------
+    FROM golang:1.22-alpine AS builder
+    WORKDIR /app
+    
+    # outils de base
+    RUN apk add --no-cache git ca-certificates
+    
+    # pré‑copie des deps pour profiter du cache
+    COPY go.mod go.sum ./
+    RUN go mod download
+    
+    # puis le reste du code
+    COPY . .
+    
+    # build statique
+    RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o docker_state_exporter .
+    
+    # -------- runtime stage ----------------------------------------------
+    FROM alpine:3.18
+    COPY --from=builder /app/docker_state_exporter /usr/local/bin/docker_state_exporter
+    
+    EXPOSE 8080
+    ENTRYPOINT ["/usr/local/bin/docker_state_exporter"]
+    CMD ["-listen-address=:8080"]
+    
