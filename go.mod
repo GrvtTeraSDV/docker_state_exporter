@@ -45,5 +45,4 @@ require (
 	gotest.tools/v3 v3.5.2 // indirect
 )
 
-require github.com/docker/engine-api v1.52.0 // ou la dernière version
-require github.com/docker/docker v26.1.4+incompatible
+require github.com/docker/engine-api v0.4.0
