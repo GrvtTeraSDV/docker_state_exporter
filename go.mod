@@ -3,7 +3,7 @@ module github.com/GrvtTeraSDV/docker_state_exporter
 go 1.23.4
 
 require (
-	github.com/docker/docker v26.1.4+incompatible
+	github.com/docker/docker v28.0.4+incompatible
 	github.com/go-kit/kit v0.13.0
 	github.com/prometheus/client_golang v1.22.0
 )
@@ -44,5 +44,3 @@ require (
 	google.golang.org/protobuf v1.36.5 // indirect
 	gotest.tools/v3 v3.5.2 // indirect
 )
-
-require github.com/docker/engine-api v0.4.0
