@@ -19,7 +19,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	types "github.com/docker/engine-api/types"
+	types "github.com/docker/docker/api/types"
 )
 
 const (
