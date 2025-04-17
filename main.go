@@ -101,7 +101,6 @@ func stateToCode(status string) float64 {
 	case "running":
 		return 6
 	default:
-		// Au cas où un nouvel état apparaisse
 		return -1
 	}
 }
