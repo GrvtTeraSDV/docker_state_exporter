@@ -13,8 +13,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/docker/docker/api/types"
+	types "github.com/docker/docker/api/types"
 	tcontainer "github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
 	"github.com/go-kit/kit/log"
 	"github.com/prometheus/client_golang/prometheus"
@@ -154,7 +155,7 @@ func (c *dockerHealthCollector) collectMetrics(ch chan<- prometheus.Metric) {
 }
 
 func (c *dockerHealthCollector) collectContainer() {
-	containers, err := c.containerClient.ContainerList(context.Background(), types.ContainerListOptions{All: true})
+	containers, err := c.containerClient.ContainerList(context.Background(), tcontainer.ListOptions{Filters: filters.NewArgs(), All: true})
 	errCheck(err)
 	c.containerInfoCache = []types.ContainerJSON{}
 
