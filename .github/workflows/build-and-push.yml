@@ -1,50 +1,47 @@
 name: Build & Push image when main.go changes
-
 on:
   push:
-    paths:
-      - 'main.go'          # ne lance le job que si main.go a changé
-    branches:
-      - '**'               # toutes les branches
+    paths: [ 'main.go' ]
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}   # owner/repo
-  DOCKERFILE: ./Dockerfile
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-
     permissions:
       contents: read
-      packages: write         # nécessaire pour pousser sur ghcr.io
+      packages: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Configure Docker Buildx (builder avancé + cache)
+      # ➜ 1) fabriquer le nom d’image en minuscules
+      - name: Compute image name (lower‑case)
+        id: vars
+        run: |
+          echo "image=$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Se connecter au Container Registry
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}  # token automatique, droits packages:write requis
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Construire et pousser l’image
+      # ➜ 2) construire & pousser avec le nom en minuscules
       - name: Build & push image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ${{ env.DOCKERFILE }}
+          file: ./Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name == 'main' && 'latest' || github.ref_name }}
+            ${{ env.REGISTRY }}/${{ steps.vars.outputs.image }}:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ steps.vars.outputs.image }}:${{ github.ref_name == 'main' && 'latest' || github.ref_name }}
           cache-from: type=gha
           cache-to:   type=gha,mode=max
