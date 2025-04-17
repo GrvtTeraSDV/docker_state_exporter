@@ -13,12 +13,13 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/docker/docker/api/types"
 	tcontainer "github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 	"github.com/go-kit/kit/log"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+
+	types "github.com/docker/engine-api/types"
 )
 
 const (
