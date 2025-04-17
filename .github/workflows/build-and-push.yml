@@ -40,6 +40,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
+          no-cache: true
           tags: |
             ${{ env.REGISTRY }}/${{ steps.vars.outputs.image }}:${{ github.sha }}
             ${{ env.REGISTRY }}/${{ steps.vars.outputs.image }}:${{ github.ref_name == 'main' && 'latest' || github.ref_name }}
