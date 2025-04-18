@@ -2,6 +2,8 @@
 # Notice
 
 Repo forked from karugaru/docker_state_exporter. This repo is not maintain.
+Original repo : 
+ - https://github.com/karugaru/docker_state_exporter
 
 # Docker State Exporter
 
