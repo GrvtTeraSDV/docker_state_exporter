@@ -1,7 +1,7 @@
 
 # Notice
 
-I don't maintain this repository very well, so please fork and use this.
+Repo forked from karugaru/docker_state_exporter. This repo is not maintain.
 
 # Docker State Exporter
 
@@ -13,6 +13,17 @@ One of the best known exporters of docker container information is [cAdvisor](ht
 However, cAdvisor does not export the state of the container.
 
 This exporter will only export the container status and the restarts count.
+
+This fork change the value of the metric "container_state_status" and you have a code for each status : 
+ - 6 for running
+ - 5 for restarting
+ - 4 for created
+ - 3 for paused
+ - 2 for dead
+ - 1 for exited
+ - 0 for removing
+
+So you can now use it on a stat panel with thresholds color scheme.
 
 ## Installation and Usage
 
@@ -26,7 +37,7 @@ For Docker run.
 sudo docker run -d \
   -v "/var/run/docker.sock:/var/run/docker.sock" \
   -p 8080:8080 \
-  karugaru/docker_state_exporter \
+  ghcr.io/grvtterasdv/docker_state_exporter:latest \
   -listen-address=:8080
 ```
 
@@ -38,7 +49,7 @@ version: '3.8'
 
 services:
   docker_state_exporter:
-    image: karugaru/docker_state_exporter
+    image: ghcr.io/grvtterasdv/docker_state_exporter:latest
     volumes:
       - type: bind
         source: /var/run/docker.sock
@@ -79,7 +90,7 @@ I have not tested it in any other environment.
 ### Build
 
 ```bash
-git clone https://github.com/karugaru/docker_state_exporter
+git clone https://github.com/GrvtTeraSDV/docker_state_exporter.git
 cd docker_state_exporter
 sudo docker build -t docker_state_exporter_test .
 ```
