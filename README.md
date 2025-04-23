@@ -47,7 +47,6 @@ For Docker compose.
 
 ```yaml
 ---
-version: '3.8'
 
 services:
   docker_state_exporter:
