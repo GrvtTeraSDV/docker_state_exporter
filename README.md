@@ -51,6 +51,7 @@ For Docker compose.
 services:
   docker_state_exporter:
     image: ghcr.io/grvtterasdv/docker_state_exporter:latest
+    container_name: docker_state_exporter
     volumes:
       - type: bind
         source: /var/run/docker.sock
